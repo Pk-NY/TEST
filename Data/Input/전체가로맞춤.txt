@@ -1,0 +1,6 @@
+Sub SheetsAutoFit()
+    Dim ws As Worksheet
+    For Each ws In ThisWorkbook.Sheets
+       ws.Columns.AutoFit
+    Next ws
+End Sub

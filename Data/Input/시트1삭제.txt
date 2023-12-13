@@ -1,0 +1,5 @@
+Sub DeleteSheet1()
+    
+    Sheets("Sheet1").Delete
+    
+End Sub
