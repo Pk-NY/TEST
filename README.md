@@ -1,39 +1,45 @@
-### Documentation is included in the Documentation folder ###
+[일간 공연랭킹알아보기]
 
+예스24 티켓 사이트에서 일간 공연 랭킹을 추출하여 결과 파일 생성하는 것을 REFramework로 구현
 
-### REFrameWork Template ###
-**Robotic Enterprise Framework**
+- 예스24티켓 공연 카테고리 리스트를 가져와서 카테고리별로 1~50위 랭킹 데이터 추출 엑셀에 카테고리별 시트를 추가하여 결과 파일 생성
 
-* Built on top of *Transactional Business Process* template
-* Uses *State Machine* layout for the phases of automation project
-* Offers high level logging, exception handling and recovery
-* Keeps external settings in *Config.xlsx* file and Orchestrator assets
-* Pulls credentials from Orchestrator assets and *Windows Credential Manager*
-* Gets transaction data from Orchestrator queue and updates back status
-* Takes screenshots in case of system exceptions
+[사전작업]
 
+Input 폴더 : 엑셀템플릿 작성, VBA 코드 파일
 
-### How It Works ###
+Config.xlsx : ResultFileName(결과파일이름), SiteURL(사이트주소), TemplateFile(적용할 엑셀양식경로),Category(가져올 공연카테고리), vba코드파일 경로
+             등 작성
+
+ [개인작업파일]
+ 
+ Business 폴더: 
+ 
+ CheckOutputFolder : output폴더 확인 후 생성
+ 
+ CopyTemplate: 템플릿파일 복사 후 결과파일 생성
+ 
+ ExcelMacro: 결과파일에 vba 코드 적용
+
+[작업과정]
 
 1. **INITIALIZE PROCESS**
- + ./Framework/*InitiAllSettings* - Load configuration data from Config.xlsx file and from assets
- + ./Framework/*GetAppCredential* - Retrieve credentials from Orchestrator assets or local Windows Credential Manager
- + ./Framework/*InitiAllApplications* - Open and login to applications used throughout the process
+
+   output폴더확인 후 생성, 템플릿파일복사결과파일 생성, yes24공연랭킹 사이트 접속해서 공연카테고리, URL DT로 생성
+   config에서 가져올 공연 카테고리 읽어와서 해당 카테고리 데이터를 dt_TransactionData에 담기
 
 2. **GET TRANSACTION DATA**
- + ./Framework/*GetTransactionData* - Fetches transactions from an Orchestrator queue defined by Config("OrchestratorQueueName") or any other configured data source
+ 
+  dt_TransactionData : 공연카테고리,URL
+  TransactionItem 타입 : DataRow
 
 3. **PROCESS TRANSACTION**
- + *Process* - Process trasaction and invoke other workflows related to the process being automated 
- + ./Framework/*SetTransactionStatus* - Updates the status of the processed transaction (Orchestrator transactions by default): Success, Business Rule Exception or System Exception
 
+    yes24티켓 사이트에서 순위, 공연명, 기간과 장소를 추출 후 카테고리별로 엑셀에 작성
+   - 1위~3위 데이터와 4위부터의 DT를 따로 추출 후 합해 준다.
+     
 4. **END PROCESS**
- + ./Framework/*CloseAllApplications* - Logs out and closes applications used throughout the process
+
+   결과파일에 vba 코드 적용하여 보기 편하게 정리, 사이트가 열려 있는지 확인 후 닫기
 
 
-### For New Project ###
-
-1. Check the Config.xlsx file and add/customize any required fields and values
-2. Implement InitiAllApplications.xaml and CloseAllApplicatoins.xaml workflows, linking them in the Config.xlsx fields
-3. Implement GetTransactionData.xaml and SetTransactionStatus.xaml according to the transaction type being used (Orchestrator queues by default)
-4. Implement Process.xaml workflow and invoke other workflows related to the process being automated
