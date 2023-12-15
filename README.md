@@ -30,8 +30,8 @@ Config.xlsx : ResultFileName(결과파일이름), SiteURL(사이트주소), Temp
 
 2. **GET TRANSACTION DATA**
  
-  dt_TransactionData : 공연카테고리,URL
-  TransactionItem 타입 : DataRow
+   dt_TransactionData : 공연카테고리,URL
+   TransactionItem 타입 : DataRow
 
 3. **PROCESS TRANSACTION**
 
